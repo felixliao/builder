@@ -34,6 +34,7 @@ class CompletionsResponse(BaseModel):
     object: str
     model: str
     choices: List[Choices]
+    token: int
 
 
 class SessionRequest(BaseModel):

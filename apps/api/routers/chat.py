@@ -31,15 +31,15 @@ def get_token_header(request: Request):
     return token
 
 
-def wrap_token(token: str, model_id: str, session_id: str, filt: bool = False) -> str:
+def wrap_token(token: str, model_id: str, session_id: str, filt: bool = False, usage: int) -> str:
     if filt:
         content = {"content": token}
         if token == CHUNK_DATA:
             return f": {json.dumps(content)}\n\n"
         return f"data: {json.dumps(content)}\n\n"
     if token == CHUNK_DATA:
-        return f": {json.dumps(CompletionsResponse(id=session_id, object='chat.completion.chunk', model=model_id, choices=[Choices(index=0, delta={'content': token})]).dict())}\n\n"
-    return f"data: {json.dumps(CompletionsResponse(id=session_id, object='chat.completion.chunk', model=model_id, choices=[Choices(index=0, delta={'content': token})]).dict())}\n\n"
+        return f": {json.dumps(CompletionsResponse(id=session_id, object='chat.completion.chunk', model=model_id, choices=[Choices(index=0, delta={'content': token})], token=usage).dict())}\n\n"
+    return f"data: {json.dumps(CompletionsResponse(id=session_id, object='chat.completion.chunk', model=model_id, choices=[Choices(index=0, delta={'content': token})], token=usage).dict())}\n\n"
 
 
 async def send_message(
